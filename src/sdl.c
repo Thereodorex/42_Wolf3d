@@ -41,23 +41,6 @@ t_sdl		*sdl_init(int x, int y, int w, int h)
 	return (sdl);
 }
 
-// void		sdl_set_img(t_sdl *sdl, t_img *img, int x_start, int y_start)
-// {
-// 	int x_current;
-// 	int y_current;
-// 	if (img->w + x_start >= sdl->surf->w)
-// 		return ;
-// 	if (img->h + y_start >= sdl->surf->h)
-// 		return ;
-// 	y_current = 0;
-// 	while (y_current < img->h)
-// 	{
-// 		x_current = 0;
-// 		while (x_current < img->w)
-// 			sdl_putpix(sdl, x_start + x_current, y_start + y_current, *(img->buffer + y_current * img->w + x_current));
-// 	}
-// }
-
 void		sdl_print(t_sdl *sdl)
 {
 	if (sdl->tex)

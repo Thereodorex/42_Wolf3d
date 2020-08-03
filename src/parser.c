@@ -61,10 +61,7 @@ void		*read_map(char *filename, t_param *param)
 	if ((fd = open(filename, O_RDONLY)) == -1)
 		STOP;
 	if (!validate(param, fd))
-	{
-		printf("here\n");
 		return NULL;
-	}
 	close(fd);
 	param->world_map = (int*)malloc(sizeof(int) * (param->map_height+2) * (param->map_width+2));
 	line = (char*)malloc(sizeof(char) * (param->map_width + 1));
@@ -96,6 +93,5 @@ void		*read_map(char *filename, t_param *param)
 	param->map_height += 2;
 	close(fd);
 	free(line);
-	printf("%d  %d", param->map_width, param->map_height);
 	return ((void*)param);
 }
