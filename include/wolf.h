@@ -34,6 +34,13 @@ typedef struct	s_sdl
 	t_img			img;
 }				t_sdl;
 
+typedef struct	s_flags
+{
+	int			minimap;
+	int			fps;
+	int			colors;
+}				t_flags;
+
 typedef struct	s_raycast
 {
 	double		camera_x;
@@ -65,6 +72,7 @@ typedef struct	s_raycast
 typedef struct	s_param
 {
 	t_raycast	rc;
+	t_flags		flags;
 	int			*world_map;
 	int			map_width;
 	int			map_height;

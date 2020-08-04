@@ -101,7 +101,8 @@ static void		rc_height(t_param *param, t_raycast *rc)
 	rc->draw_end = rc->line_height / 2 + param->h / 2;
 	if(rc->draw_end >= param->h)
 		rc->draw_end = param->h - 1;
-	// rc->tex_num = param->world_map[rc->map_y * param->map_width + rc->map_x] - 1;
+	if (param->flags.colors)
+		rc->tex_num = param->world_map[rc->map_y * param->map_width + rc->map_x] - 1;
 	// rc->tex_num = rc->side;
 	if(rc->side == 0)
 		rc->wall_x = param->pos_y + rc->perp_wall_dist * rc->ray_dir_y;
@@ -140,5 +141,6 @@ void			raycast(t_sdl *sdl, t_param *param, t_raycast *rc)
 			sdl_putpix(sdl, x, y, color);
 		}
 	}
-	minimap(sdl, param);
+	if (param->flags.minimap)
+		minimap(sdl, param);
 }

@@ -17,13 +17,13 @@ static void		move(t_param *param, int back)
 		param->pos_y += param->dir_y * move_speed;
 }
 
-static void		rotate(t_param *param, int left)
+static void		rotate(t_param *param, int right)
 {
 	double old_dir_x;
 	double old_plane_x;
 	double rot_speed;
 
-	rot_speed = left ? param->rot_speed : -param->rot_speed;
+	rot_speed = right ? -param->rot_speed : param->rot_speed;
 	old_dir_x = param->dir_x;
 	param->dir_x = param->dir_x * cos(rot_speed) - param->dir_y * sin(rot_speed);
 	param->dir_y = old_dir_x * sin(rot_speed) + param->dir_y * cos(rot_speed);
@@ -35,32 +35,39 @@ static void		rotate(t_param *param, int left)
 int			catch_event(t_param *param, t_sdl *sdl, SDL_Event *event)
 {
 	if (SDL_PollEvent(event))
-        {
-            if (event->type == SDL_QUIT)
-                return (1);
-            else if (event->type == SDL_WINDOWEVENT)
-            {
-                if (event->window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
-                {
-                    SDL_DestroyRenderer(sdl->ren);
-                    sdl->ren = SDL_CreateRenderer(sdl->win, -1,
-                            SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-                    sdl_print(sdl);
-                }
-            }
-            else if (event->type == SDL_KEYDOWN)
-            {
-                if (event->key.keysym.sym == SDLK_ESCAPE)
-                    return (1);
-                if (event->key.keysym.sym == SDLK_UP)
+		{
+			if (event->type == SDL_QUIT)
+				return (1);
+			else if (event->type == SDL_WINDOWEVENT)
+			{
+				if (event->window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
+				{
+					SDL_DestroyRenderer(sdl->ren);
+					sdl->ren = SDL_CreateRenderer(sdl->win, -1,
+							SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+					sdl_print(sdl);
+				}
+			}
+			else if (event->type == SDL_KEYDOWN)
+			{
+				if (event->key.keysym.sym == SDLK_ESCAPE)
+					return (1);
+				else if (event->key.keysym.sym == SDLK_UP)
 					move(param, 0);
-                if (event->key.keysym.sym == SDLK_DOWN)
+				else if (event->key.keysym.sym == SDLK_DOWN)
 					move(param, 1);
-                if (event->key.keysym.sym == SDLK_RIGHT)
+				else if (event->key.keysym.sym == SDLK_RIGHT)
 					rotate(param, 0);
-                if (event->key.keysym.sym == SDLK_LEFT)
+				else if (event->key.keysym.sym == SDLK_LEFT)
 					rotate(param, 1);
-            }
-        }
+			}
+			else if (event->type == SDL_KEYUP)
+			{
+				if (event->key.keysym.sym == 109)
+					param->flags.minimap = !param->flags.minimap;
+				else if (event->key.keysym.sym == 99)
+					param->flags.colors = !param->flags.colors;
+			}
+		}
 	return (0);
 }
