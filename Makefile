@@ -14,7 +14,9 @@ SRC				=	main.c \
 					keys.c \
 					sdl.c \
 					raycast.c \
-					parser.c
+					parser.c \
+					floorcast.c \
+					minimap.c
 
 
 
@@ -23,12 +25,10 @@ OBJ				=	$(addprefix $(OBJ_DIR)/,$(SRC:.c=.o))
 INCS			=	-I$(INC_DIR) \
 					-I./frameworks/SDL2.framework/Versions/A/Headers \
 					-I./frameworks/SDL2_image.framework/Versions/A/Headers \
-					-I./frameworks/SDL2_ttf.framework/Versions/A/Headers \
-					-I./frameworks/SDL2_mixer.framework/Versions/A/Headers \
 
 FRAMEWORKS		=	-F./frameworks \
 					-rpath ./frameworks \
-					-framework SDL2 -framework SDL2_ttf -framework SDL2_image -framework SDL2_mixer
+					-framework SDL2 -framework SDL2_image
 
 CC				=	gcc
 

@@ -7,6 +7,7 @@
 # include <stdlib.h>
 # include <math.h>
 # include <SDL.h>
+# include <SDL_image.h>
 # include <time.h>
 
 # define STOP exit(0);
@@ -15,8 +16,8 @@
 # define HEIGHT 1080
 # define TEX_WIDTH 64
 # define TEX_HEIGHT 64
-# define mapWidth 24
-# define mapHeight 24
+// # define mapWidth 24
+// # define mapHeight 24
 
 typedef struct	s_img
 {
@@ -40,6 +41,25 @@ typedef struct	s_flags
 	int			fps;
 	int			colors;
 }				t_flags;
+
+typedef struct	s_floor
+{
+	float ray_dir_x0;
+	float ray_dir_y0;
+	float ray_dir_x1;
+	float ray_dir_y1;
+	int p;
+	float pos_z;
+	float row_distance;
+	float step_x;
+	float step_y;
+	float x;
+	float y;
+	int cell_x;
+	int cell_y;
+	int tx;
+	int ty;
+}				t_floor;
 
 typedef struct	s_raycast
 {
@@ -67,6 +87,7 @@ typedef struct	s_raycast
 	double		tex_pos;
 	double		step;
 	int			hit_side;
+	t_floor		floor;
 }				t_raycast;
 
 typedef struct	s_param
@@ -95,11 +116,14 @@ t_sdl			*sdl_init(int x, int y, int w, int h);
 void			*sdl_destroy(t_sdl *sdl);
 void			sdl_print(t_sdl *sdl);
 void			sdl_putpix(t_sdl *sdl, int x, int y, unsigned int color);
-void			sdl_set_img(t_sdl *sdl, t_img *img, int x_start, int y_start);
+void			load_image_to_buffer(t_sdl *sdl, char *filename, int *buffer);
 
 int				catch_event(t_param *p, t_sdl *sdl, SDL_Event *event);
 
 void			raycast(t_sdl *sdl, t_param *param, t_raycast *rc);
+void			floor_cast(t_sdl *sdl, t_param *param, t_raycast *rc);
+
+void			draw_minimap(t_sdl *sdl, t_param *param);
 
 void			*read_map(char *filename, t_param *param);
 

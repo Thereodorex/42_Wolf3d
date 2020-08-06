@@ -14,6 +14,7 @@ void		*sdl_destroy(t_sdl *sdl)
 		SDL_DestroyWindow(sdl->win);
 	free(sdl);
 	SDL_Quit();
+	IMG_Quit();
 	return (NULL);
 }
 
@@ -51,6 +52,33 @@ void		sdl_print(t_sdl *sdl)
 	if (SDL_RenderCopy(sdl->ren, sdl->tex, NULL, NULL))
 		STOP;
 	SDL_RenderPresent(sdl->ren);
+}
+
+void		load_image_to_buffer(t_sdl *sdl, char *filename, int *buffer)
+{
+	unsigned		flags;
+	SDL_Surface		*img;
+	int				y;
+	int				x;
+	unsigned int	*ptr;
+
+	flags = IMG_INIT_PNG;
+	if (!(IMG_Init(flags) & flags))
+		return ;
+	if (!(img = IMG_Load(filename)))
+		return ;
+	if (!(img = SDL_ConvertSurface(img, sdl->surf->format, 0)))
+		return ;
+	if (img->w != TEX_WIDTH || img->h != TEX_HEIGHT)
+		return ;
+	ptr = (unsigned int *)img->pixels;
+	y = -1;
+	while (++y < TEX_HEIGHT)
+	{
+		x = -1;
+		while (++x < TEX_WIDTH)
+			buffer[TEX_WIDTH * y + x] = *(ptr + y * img->w + x);
+	}
 }
 
 void		sdl_putpix(t_sdl *sdl, int x, int y, unsigned int color)

@@ -6,7 +6,8 @@ static int	validate_other_lines(t_param *param, int fd)
 	char	*line;
 
 	param->map_height = 1;
-	line = (char*)malloc(sizeof(char) * (param->map_width + 1));
+	if (!(line = (char*)malloc(sizeof(char) * (param->map_width + 1))))
+		return (0);
 	while ((read(fd, line, param->map_width + 1) == param->map_width + 1))
 	{
 		if (line[param->map_width] != '\n')
@@ -49,26 +50,26 @@ static int	validate(t_param *param, int fd)
 		param->map_width++;
 	}
 	if (!validate_other_lines(param, fd))
-		return (1);
+		return (0);
 	if (!param->pos_x)
 		return (0);
 	return (1);
 }
 
-static void	read_file(t_param *param, int fd, char *line, int i)
+static int	read_file(t_param *param, int fd, char *line, int i)
 {
 	int		j;
 
 	while (++i < param->map_height + 2)
 	{
 		if (i != 0 && i != param->map_height + 1)
-			read(fd, line, param->map_width + 1);
+			if (read(fd, line, param->map_width + 1) != param->map_width + 1)
+				return (0);
 		j = -1;
 		while (++j < param->map_width + 2)
 		{
 			if (i == 0 || j == 0 ||
-				i == param->map_height + 1 ||
-				j == param->map_width + 1)
+			i == param->map_height + 1 || j == param->map_width + 1)
 				param->world_map[i * (param->map_width + 2) + j] = 1;
 			else if (line[j - 1] == 'X')
 			{
@@ -81,6 +82,7 @@ static void	read_file(t_param *param, int fd, char *line, int i)
 					(int)(line[j - 1] - '0');
 		}
 	}
+	return (1);
 }
 
 void		*read_map(char *filename, t_param *param)
@@ -92,7 +94,7 @@ void		*read_map(char *filename, t_param *param)
 	param->pos_x = 0;
 	param->pos_y = 0;
 	if ((fd = open(filename, O_RDONLY)) == -1)
-		STOP;
+		return (NULL);
 	if (!validate(param, fd))
 		return (NULL);
 	close(fd);
@@ -100,9 +102,10 @@ void		*read_map(char *filename, t_param *param)
 	param->world_map = (int*)malloc(sizeof(int) *
 		(param->map_height + 2) * (param->map_width + 2));
 	if ((fd = open(filename, O_RDONLY)) == -1)
-		STOP;
+		return (NULL);
 	i = -1;
-	read_file(param, fd, line, i);
+	if (!(read_file(param, fd, line, i)))
+		return (NULL);
 	param->map_width += 2;
 	param->map_height += 2;
 	close(fd);
